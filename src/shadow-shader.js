@@ -33,16 +33,19 @@ vec3 getSunColor (vec3 sunDirection, vec3 p0){
     vec3 p = p0 + t * sunDirection;
     vec3 n = normalize(p - sunPos);
 
-    float diffuse  = max(0.0, dot(n, -sunDirection));
+    float diffuse  = max(0.0, dot(-n, sunDirection));
 
-    return vec3(1.0 , 0.9, 0.9) * diffuse;
+    return vec3(1.0) * diffuse;
 }
 
 void main() {
     vec3 cameraPos = vec3(0.0, 0.0, 0.0);
-    vec3 sunDirection = normalize(vec3(gl_FragCoord.xy / uResolution -0.5, -1.0));
+    vec2 pix = gl_FragCoord.xy / uResolution - vec2(0.5);
+    vec3 sunDirection = normalize(vec3(vec2(pix.x, -pix.y), -1.0));
 
-    gl_FragColor = vec4(getSunColor(sunDirection ,cameraPos), 1.0);
+    vec3 finalColor = getSunColor(sunDirection ,cameraPos);
+
+    gl_FragColor = vec4(finalColor, 1.0);
 
 }
 `;
