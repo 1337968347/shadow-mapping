@@ -10,7 +10,7 @@ const renderer = new THREE.WebGLRenderer();
 document.body.appendChild(renderer.domElement);
 const geometry = new THREE.PlaneGeometry(1, 1);
 
-const sunInfo = new THREE.Vector4(0, 100, 50, 10);
+const sunInfo = new THREE.Vector4(0, 10, 150, 20);
 const uResolution = new THREE.Vector2(900, 900);
 
 const worldMatrix = new THREE.Matrix4().makeScale(1000, 1000, 1000);
