@@ -1,11 +1,15 @@
 export const vertexShader = `
 uniform mat4 projection;
 uniform mat4 mMatrix;
+uniform mat4 carMatrix;
+varying vec3 vNormal;
 
 void main() {
 
     vec4 worldPosition = mMatrix * vec4(position, 1.0);
     gl_Position = projection * worldPosition;
+
+    vNormal = normalize((carMatrix * vec4(normal, 1.0) ).xyz);
 }
 
 `;
@@ -13,6 +17,8 @@ export const fragmentShader = `
 precision highp float;
 uniform vec4 sunInfo;
 uniform vec2 uResolution;
+uniform vec3 cameraPos;
+varying vec3 vNormal;
 
 // 直线跟球求交点
 void isPhere (in vec3 origin, in vec3 direction, in vec4 sphere , inout float t){
@@ -49,7 +55,7 @@ vec3 getSkyColor (vec3 sunDirection, vec3 p0){
     // 太阳方向跟当前顶点方向的夹角
     float sunTheta  = max(dot(-n, sunDirection), 0.0);
     // 太阳底色
-    vec3 sunColor = vec3(1.1, 1.0, 1.0) * max(sunTheta - 0.75, 0.0) * 5.0;
+    vec3 sunColor = vec3(1.1, 1.0, 1.0) * max(sunTheta - 0.7, 0.0) * 5.0;
     // 光晕
     vec3 sunAtmosphere = max(sunColor - skyColor, vec3(0.0)) * max(sunTheta - 0.96, 0.0) * 20.0;
     sunAtmosphere = sunAtmosphere * sunAtmosphere * 20.0 * vec3(2.0, 1.5, 0.4);
@@ -58,11 +64,10 @@ vec3 getSkyColor (vec3 sunDirection, vec3 p0){
 }
 
 void main() {
-    vec3 cameraPos = vec3(0.0, 0.0, 0.0);
     vec2 pix = gl_FragCoord.xy / uResolution - vec2(0.5);
     vec3 sunDirection = normalize(vec3(vec2(pix.x, -pix.y), -1.0));
 
-    vec3 finalColor = getSkyColor(sunDirection ,cameraPos);
+    vec3 finalColor = getSkyColor(sunDirection ,cameraPos) + vNormal;
 
     gl_FragColor = vec4(finalColor, 1.0);
 
