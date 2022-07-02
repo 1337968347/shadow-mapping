@@ -1,6 +1,7 @@
 export const vertexShader = `
 uniform mat4 projection;
-uniform mat4 carMatrix;
+uniform mat4 bunnyMatrix;
+uniform mat4 mMatrix;
 varying vec3 vNormal;
 varying vec3 VPosition;
 
@@ -9,7 +10,7 @@ void main() {
     vec4 worldPosition = mMatrix * vec4(position, 1.0);
     gl_Position = projection * worldPosition;
     VPosition = vec3(worldPosition.xyz);
-    vNormal = normalize((carMatrix * vec4(normal, 1.0) ).xyz);
+    vNormal = normalize((bunnyMatrix * vec4(normal, 1.0) ).xyz);
 }
 
 `;
