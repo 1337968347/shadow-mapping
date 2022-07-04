@@ -8,11 +8,11 @@ import {
 import { bunnyStr } from './bunny-obj';
 import { getPosAndNormal } from './util';
 
-const width = 1000;
-const height = 1000;
+const width = 700;
+const height = 700;
 
 const scene = new THREE.Scene();
-const camera = new THREE.OrthographicCamera(-256, 256, 256, -256, -256, 256);
+const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 100000);
 
 camera.position.z = 10;
 
@@ -28,7 +28,7 @@ const uResolution = new THREE.Vector2(width, height);
 const worldMatrix = new THREE.Matrix4().makeScale(1000, 1000, 1000);
 
 const renderSKy = () => {
-  const skyGeometry = new THREE.PlaneGeometry(1, 1);
+  const skyGeometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.ShaderMaterial({
     uniforms: {
       cameraPos: { value: camera.position },
@@ -38,6 +38,7 @@ const renderSKy = () => {
       sunColor: { value: sunColor },
       uResolution: { value: uResolution }
     },
+    side: THREE.BackSide,
     vertexShader,
     fragmentShader
   });
@@ -58,7 +59,8 @@ const renderBunny = () => {
   geometry.setAttribute('position', new THREE.BufferAttribute(vertexs, 3));
   geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
 
-  const bunnyMatrix = new THREE.Matrix4().makeScale(1000, 1000, 1000);
+  const bunnyMatrix = new THREE.Matrix4().makeScale(100, 100, 100);
+  bunnyMatrix.makeTranslation(0, 0, -1000);
 
   const material = new THREE.ShaderMaterial({
     uniforms: {
