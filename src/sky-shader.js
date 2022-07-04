@@ -41,9 +41,9 @@ void isPhere (in vec3 origin, in vec3 direction, in vec4 sphere , inout float t)
 }
 
 vec3 getSkyColor (vec3 sunDirection, vec3 p0){
-    float t = 1.0;
+    float t = -1.0;
 
-    isPhere( p0, sunDirection, sunPos , t);
+    isPhere(p0, sunDirection, sunPos , t);
     
     // 天空颜色
     vec3 skyColor = vec3(0.0, 0.2, 0.55);
@@ -52,8 +52,11 @@ vec3 getSkyColor (vec3 sunDirection, vec3 p0){
     // 天空的角度
     vec3 direction = normalize(worldPosition.xyz);
     float a = dot(direction, vec3(0.0, 1.0, 0.0));
-
+    
     vec3 backgroundColor = mix(skyColor , groundColor , a);
+    if(t < 0.0){
+        return backgroundColor;
+    }
 
     // 离相机较近的交点
     vec3 p = p0 + t * sunDirection;
